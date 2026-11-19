@@ -8,16 +8,18 @@ read domain || exit 1
 [ -n "$domain" ] || { printf "  empty domain\n"; exit 1; }
 
 printf "...public DNS (dns.google)\n"
-curl -s "https://dns.google/resolve?name=$domain&type=A" | python3 -c '
+curl -s "https://dns.google/resolve?name=$domain&type=A" > /tmp/nettools_doh.json
+python3 - /tmp/nettools_doh.json <<'EOF'
 import json, sys
 try:
-    data = json.load(sys.stdin)
+    data = json.load(open(sys.argv[1]))
 except Exception:
     print("  (unexpected response)")
     sys.exit(0)
 for a in data.get("Answer", []):
-    print(f"  {a.get(\"name\")} -> {a.get(\"data\")}")
-'
+    print("  " + a.get("name") + " -> " + a.get("data"))
+EOF
+rm -f /tmp/nettools_doh.json
 
 printf "...headers (curl -sI)\n"
 curl -s -I --max-time 15 "https://$domain/" | grep -iE 'cf-ray|cf-cache-status|server:' || printf "  (no Cloudflare headers)\n"

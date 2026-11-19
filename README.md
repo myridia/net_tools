@@ -15,6 +15,7 @@ single task-runner menu (`./ask.sh`). Nothing to build, nothing to install — P
 | NET   | 1  | Ping a host |
 | NET   | 2  | Traceroute to a host |
 | NET   | 3  | Check common TCP ports on a host |
+| NET   | 4  | Port scan (nmap -sT if installed, else connect scan) |
 | WEB   | 10 | HTTP response headers (`curl -sI`) |
 | WEB   | 11 | Cloudflare proxy check — public DNS + headers + IP-range verdict |
 | WEB   | 12 | TLS certificate info (subject, issuer, dates) |
